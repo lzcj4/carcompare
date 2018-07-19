@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.carcompare.mapper.LogMapper" >
+    <resultMap id="baseResultMap" type="com.carcompare.core.logs.Log">
+        <id property="id" column="id" />
+        <result property="username" column="username" />
+        <result property="time" column="time" />
+        <result property="type" column="type"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+    <select id="getAllLogs" resultMap="baseResultMap">
+        SELECT l.* FROM log l LEFT JOIN `user` u ON l.username = u.username WHERE 1=1
+        <if test="username != '' and username != null">
+            AND l.`username` LIKE concat('%',#{username},'%')
+        </if>
+        <if test="type !='' and type != null">
+            AND l.`type` = #{type}
+        </if>
+        <if test="beginTime!='' and beginTime != null and endTime != '' and endTime != null">
+            AND l.time >= #{beginTime} AND l.time &lt;= #{endTime}
+        </if>
+        ORDER BY l.time DESC
+    </select>
+
+    <insert id="addLog" parameterType="com.carcompare.core.logs.Log">
+        INSERT  INTO log
+        (username,`time`, `type`, description)
+        VALUES
+        (#{username}, #{time}, #{type}, #{description})
+    </insert>
+
+</mapper>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.carcompare.mapper.UserMapper">
+    <resultMap id="baseResultMap" type="com.carcompare.core.users.User">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="salt" column="salt"/>
+        <result property="status" column="status"/>
+        <result property="creationUserId" column="creationUserId"/>
+        <result property="creationUserName" column="creationUserName"/>
+        <result property="creationTime" column="creationTime"/>
+        <association property="role" javaType="com.carcompare.core.roles.Role">
+            <id property="id" column="r_id"/>
+            <result property="code" column="r_code"/>
+            <result property="name" column="r_name"/>
+            <result property="description" column="r_description"/>
+            <result property="isBackend" column="r_isBackend"/>
+            <result property="defaultUrl" column="r_defaultUrl"/>
+            <result property="enabled" column="r_enabled"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectAll">
+        SELECT u1.*, u2.name AS creationUserName,r.id r_id, r.code r_code, r.name r_name,r.description r_description, r.isBackend r_isBackend, r.defaultUrl r_defaultUrl, r.enabled r_enabled
+        FROM user u1
+        LEFT JOIN user u2 ON u1.creationUserId = u2.id
+        LEFT JOIN user_role ur ON u1.id = ur.userId
+        LEFT JOIN role r ON r.id = ur.roleId
+        WHERE 1=1
+    </sql>
+
+    <select id="getAllUsers" resultMap="baseResultMap">
+        <include refid="selectAll"></include>
+        AND u1.username != 'admin'
+        <if test="keywords!=''">
+            AND (u1.`name` LIKE concat('%',#{keywords},'%') OR u1.`username` LIKE concat('%',#{keywords},'%'))
+        </if>
+        ORDER BY u1.id DESC
+    </select>
+
+    <select id="getUsersByCreator" resultMap="baseResultMap">
+        <include refid="selectAll"></include>
+        AND u1.creationUserId = #{creator}
+        <if test="keywords!=''">
+            AND (u1.`name` LIKE concat('%',#{keywords},'%') OR u1.`username` LIKE concat('%',#{keywords},'%'))
+        </if>
+        ORDER BY u1.id DESC
+    </select>
+
+    <select id="getByUsername" resultMap="baseResultMap">
+        <include refid="selectAll"></include>
+        <if test="username!=''">
+            AND (u1.`username` = #{username})
+        </if>
+        ORDER BY u1.id ASC
+    </select>
+
+    <insert id="addUser" parameterType="com.carcompare.core.users.User" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO user
+        (name, username, password, salt, status, creationUserId, creationTime)
+        values
+        (#{name}, #{username}, #{password}, #{salt}, #{status}, #{creationUserId}, #{creationTime})
+  </insert>
+
+    <update id="updateUser">
+        UPDATE user
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteUsers">
+        DELETE FROM user WHERE id IN
+        <foreach collection="ids" separator="," open="(" close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="resetPassWord">
+        UPDATE  user set password=#{defaultPassword} WHERE id IN
+        <foreach collection="ids" separator="," open="(" close=")" item="id">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updatePassword">
+    UPDATE user SET password = #{encryptedPassword} WHERE id = #{userId}
+  </update>
+</mapper>

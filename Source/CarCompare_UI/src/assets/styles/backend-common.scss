@@ -1,0 +1,47 @@
+/**
+* 该文件用于配置后台通用样式
+*/
+
+.toolbar {
+	background: #f2f2f2;
+	padding: 10px;
+	margin: 10px 0px;
+	.el-form-item {
+		margin-bottom: 10px;
+	}
+}
+
+//搜索栏
+.search-bar {
+    background: #f2f2f2;
+	padding: 10px;
+	margin-bottom: 10px;
+	.el-form-item {
+		margin-bottom: 10px;
+	}  
+}
+
+//分页栏
+.pagination-bar {
+    background: #f2f2f2;
+	padding: 10px;
+	margin-top: 10px;
+	.el-form-item {
+		margin-bottom: 10px;
+	}  
+}
+
+//面包屑导航样式
+.el-breadcrumb__item{
+	color: #102045;
+	font-size: 16px;
+	font-family: "微软雅黑";
+	font-weight: bold;
+}
+
+//优化radio组样式
+.el-radio {
+	margin-left: 5px !important;
+	margin-right: 5px !important;
+	margin-bottom: 10px !important;
+}

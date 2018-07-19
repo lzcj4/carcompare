@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.carcompare.mapper.UserRoleMapper">
+    <resultMap id="baseResultMap" type="com.carcompare.core.users.UserRole">
+    </resultMap>
+
+    <select id="getAllUserRoles" resultMap="baseResultMap">
+        SELECT * FROM user_role
+    </select>
+
+    <delete id="deleteByUserId" parameterType="Long">
+        DELETE FROM user_role WHERE userId=#{userId}
+    </delete>
+
+    <delete id="deleteByUserIds">
+        DELETE FROM user_role WHERE userId IN
+        <foreach collection="userIds" separator="," open="(" close=")" item="userId">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <insert id="addUserRole">
+        INSERT INTO user_role(userId, roleId) VALUES (#{userId},#{roleId})
+    </insert>
+</mapper>

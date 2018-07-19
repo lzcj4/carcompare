@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.carcompare.mapper.RoleMapper">
+
+    <resultMap id="baseResultMap" type="com.carcompare.core.roles.Role">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="isBackend" column="isBackend"/>
+        <result property="enabled" column="enabled"/>
+        <collection property="menus"
+                    column="id"
+                    select="com.carcompare.mapper.MenuMapper.getMenuItemsByRoleId"/>
+    </resultMap>
+
+    <sql id="selectAll">
+        SELECT r.*  FROM role r
+		LEFT JOIN user_role ur ON r.id=ur.roleId
+        WHERE 1=1
+    </sql>
+
+    <select id="selectMenuByRoleId" resultMap="com.carcompare.mapper.MenuMapper.baseResultMap">
+        SELECT * FROM menu  m Left JOIN  role_menu rm on rm.menuId=m.id WHERE rm.roleId = #{roleId}
+    </select>
+
+    <select id="getAllRoles" resultMap="baseResultMap">
+        SELECT * FROM role WHERE 1=1
+        <if test="keywords != null">
+            AND (`code` LIKE concat('%',#{keywords},'%') OR `name` LIKE concat('%',#{keywords},'%'))
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <select id="getEnabledRoles" resultMap="baseResultMap">
+      SELECT * FROM role WHERE enabled = true
+    </select>
+
+    <select id="getRolesByUserId" resultType="com.carcompare.core.roles.Role" >
+        <include refid="selectAll"></include>
+        and ur.userId = #{userId}
+    </select>
+
+    <insert id="addRole" parameterType="com.carcompare.core.roles.Role">
+    INSERT INTO role
+    (code, `name`, description, isBackend, enabled, defaultUrl, defaultUrlName)
+    VALUES
+    (#{code}, #{name}, #{description}, #{isBackend}, #{enabled}, #{defaultUrl}, #{defaultUrlName})
+    </insert>
+
+    <update id="updateRole">
+        UPDATE role
+        <set>
+            <if test="code != null">
+                `name` = #{code},
+            </if>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="isBackend != null">
+                isBackend = #{isBackend},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled},
+            </if>
+            <if test="defaultUrl != null">
+                defaultUrl = #{defaultUrl},
+            </if>
+            <if test="defaultUrlName != null">
+                defaultUrlName = #{defaultUrlName},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteRoles">
+        DELETE FROM role WHERE id IN
+        <foreach collection="ids" separator="," open="(" close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getRoleMenus" resultType="com.carcompare.core.menus.Menu">
+      SELECT m.* FROM role AS r ,user_role AS ur,menu AS m
+      WHERE r.id = ur.roleId AND ur.menuId = m.id AND r.id = #{roleId}
+    </select>
+</mapper>

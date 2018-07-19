@@ -1,0 +1,23 @@
+2018-07-10更新说明
+
+
+1、更新前后端代码文件
+com和static目录
+
+
+
+2、更新application.properties文件
+增加配置：
+
+# 前端用户角色编码
+custom.frontend.user.rolecode = 003
+
+# 前端管理员角色编码
+custom.frontend.administrator.rolecode = 002
+
+
+
+3、更新内容
+a.禅道上相关BUG
+b.重构用户管理模块，前端管理员只能创建前端用户
+

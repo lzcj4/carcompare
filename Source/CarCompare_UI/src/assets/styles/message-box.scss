@@ -1,0 +1,31 @@
+/**
+* 消息框样式
+*/
+
+.el-message-box{
+    border-radius: 0px;
+    border: 0px;
+}
+
+.el-message-box__header{
+    background: #20a0ff;
+    padding: 8px 15px 8px    
+}
+
+.el-message-box__title {
+    font-size: 14px;
+    line-height: 1;
+    color: #ffffff;
+}
+
+.el-message-box__headerbtn{
+    top:8px;
+}
+
+.el-message-box__headerbtn .el-message-box__close{
+    color:#ffffff;
+}
+
+.el-message-box__headerbtn .el-icon-close:before {
+    color: #ffffff !important;
+}

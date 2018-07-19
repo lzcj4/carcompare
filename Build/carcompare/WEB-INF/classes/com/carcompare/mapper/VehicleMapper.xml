@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.carcompare.mapper.VehicleMapper">
+    <resultMap id="baseResultMap" type="com.carcompare.core.vehicles.Brand">
+        <id property="id" column="id" jdbcType="CHAR"/>
+        <result property="name" column="name"/>
+        <result property="total" column="total"/>
+    </resultMap>
+    <resultMap id="seriesResultMap" type="com.carcompare.core.vehicles.Series">
+        <id property="id" column="id" jdbcType="CHAR"/>
+        <result property="name" column="name"/>
+        <result property="total" column="total"/>
+    </resultMap>
+    <resultMap id="modelYearResultMap" type="com.carcompare.core.vehicles.ModelYear">
+        <id property="id" column="id" jdbcType="CHAR"/>
+        <result property="name" column="name"/>
+        <result property="total" column="total"/>
+    </resultMap>
+    <resultMap id="modelResultMap" type="com.carcompare.core.vehicles.Model">
+        <id property="id" column="id" jdbcType="CHAR"/>
+        <result property="name" column="name"/>
+        <result property="total" column="total"/>
+    </resultMap>
+
+    <resultMap id="vehicleResultMap" type="com.carcompare.dto.car.Vehicle">
+        <id property="id" column="id" />
+        <result property="brandId" column="brandId" />
+        <result property="initials" column="initials" />
+        <result property="seriesId" column="seriesId"/>
+        <result property="series" column="series" />
+        <result property="yearId" column="yearId" />
+        <result property="yearCode" column="yearCode"/>
+        <result property="year" column="modelyear" />
+        <result property="modelId" column="modelId" />
+        <result property="model" column="model"/>
+        <result property="picUrl" column="image" />
+    </resultMap>
+
+    <resultMap id="vehicleDescription" type="String">
+        <result property="description" column="description" />
+    </resultMap>
+
+    <select id="getBrandsWithVehicleCount" resultMap="baseResultMap">
+        SELECT b.*,(SELECT COUNT(1) FROM biz_vehicle bv WHERE bv.brand=b.id AND bv.status = #{vehicleStatus}) AS total FROM biz_brand b
+        ORDER BY  b.initials ASC,convert(name using gbk) ASC
+    </select>
+
+    <select id="getSeriesWithVehicleCount" resultMap="seriesResultMap">
+        SELECT s.*,(SELECT COUNT(1) FROM biz_vehicle bv WHERE bv.series=s.id AND bv.status = #{vehicleStatus}) as total FROM biz_series s
+        WHERE s.parentid = #{brandId}
+        ORDER BY convert(name using gbk) ASC
+    </select>
+
+    <select id="getModelYearsWithVehicleCount" resultMap="modelYearResultMap">
+        SELECT y.id as id,y.name as name,(SELECT COUNT(1) from biz_vehicle bv
+        WHERE bv.modelyear=y.id AND bv.status = #{vehicleStatus}) as total
+        FROM biz_year y
+        WHERE y.parentid = #{seriesId}
+        ORDER BY convert(name using gbk) ASC
+    </select>
+
+    <select id="getModelsWithVehicleCount" resultMap="modelResultMap">
+		SELECT *,(SELECT COUNT(1) from biz_vehicle bv
+        WHERE bv.model=m.id AND bv.status = #{vehicleStatus}) as total
+		FROM biz_model m
+        WHERE parentid = #{modelyearId}
+        ORDER BY convert(name using gbk) ASC
+    </select>
+
+    <sql id="getAllVehiclesConditions">
+        WHERE  1=1
+        <if test="brand !=null and brand != ''">
+            AND ${tableName}.brand = #{brand}
+        </if>
+        <if test="series !=null and series != ''">
+            AND ${tableName}.series=#{series}
+        </if>
+        <if test="modelyear !=null and modelyear != ''">
+            AND ${tableName}.modelyear = #{modelyear}
+        </if>
+        <if test="year !=null and year !=''">
+            AND ${tableName}.yearCode = #{year}
+        </if>
+        <if test="model !=null and model != ''">
+            AND ${tableName}.model=#{model}
+        </if>
+        <if test="type !=null and type != ''">
+            AND ${tableName}.type = #{type}
+        </if>
+        <if test="xiangxing !=null and xiangxing != ''">
+            AND ${tableName}.xiangxing=#{xiangxing}
+        </if>
+        <if test="chebiaokuangxing !=null and chebiaokuangxing != ''">
+            AND ${tableName}.chebiaokuangxing = #{chebiaokuangxing}
+        </if>
+        <if test="chebiaoweizhi !=null and chebiaoweizhi != ''">
+            AND ${tableName}.chebiaoweizhi=#{chebiaoweizhi}
+        </if>
+        <if test="geshanjiegou !=null and geshanjiegou != ''">
+            AND ${tableName}.geshanjiegou = #{geshanjiegou}
+        </if>
+        <if test="shanggeshanxing !=null and shanggeshanxing != ''">
+            AND ${tableName}.shanggeshanxing=#{shanggeshanxing}
+        </if>
+        <if test="geshanqianwu !=null and geshanqianwu != ''">
+            AND ${tableName}.geshanqianwu = #{geshanqianwu}
+        </if>
+        <if test="geshanqianzhao !=null and geshanqianzhao != ''">
+            AND ${tableName}.geshanqianzhao=#{geshanqianzhao}
+        </if>
+        <if test="qianbaohuban !=null and qianbaohuban != ''">
+            AND ${tableName}.qianbaohuban = #{qianbaohuban}
+        </if>
+        <if test="frontxinnengyuanbiao !=null and frontxinnengyuanbiao != ''">
+            AND ${tableName}.frontxinnengyuanbiao=#{frontxinnengyuanbiao}
+        </if>
+        <if test="bzhuyanse !=null and bzhuyanse != ''">
+            AND ${tableName}.bzhuyanse = #{bzhuyanse}
+        </if>
+        <if test="houchuangxiaochuang !=null and houchuangxiaochuang != ''">
+            AND ${tableName}.houchuangxiaochuang=#{houchuangxiaochuang}
+        </if>
+        <if test="houchuangxiayan !=null and houchuangxiayan != ''">
+            AND ${tableName}.houchuangxiayan = #{houchuangxiayan}
+        </if>
+        <if test="menbashou !=null and menbashou != ''">
+            AND ${tableName}.menbashou=#{menbashou}
+        </if>
+        <if test="menbashouyanse !=null and menbashouyanse != ''">
+            AND ${tableName}.menbashouyanse = #{menbashouyanse}
+        </if>
+        <if test="menxianwei !=null and menxianwei != ''">
+            AND ${tableName}.menxianwei=#{menxianwei}
+        </if>
+        <if test="lungulunfu !=null and lungulunfu != ''">
+            AND ${tableName}.lungulunfu = #{lungulunfu}
+        </if>
+        <if test="youxianggaiwei !=null and youxianggaiwei != ''">
+            AND ${tableName}.youxianggaiwei=#{youxianggaiwei}
+        </if>
+        <if test="sidexinnengyuanbiao !=null and sidexinnengyuanbiao != ''">
+            AND ${tableName}.sidexinnengyuanbiao = #{sidexinnengyuanbiao}
+        </if>
+        <if test="houchuangkuangxing !=null and houchuangkuangxing != ''">
+            AND ${tableName}.houchuangkuangxing=#{houchuangkuangxing}
+        </if>
+        <if test="weidengweizhi !=null and weidengweizhi != ''">
+            AND ${tableName}.weidengweizhi = #{weidengweizhi}
+        </if>
+        <if test="weidengxingzhuang !=null and weidengxingzhuang != ''">
+            AND ${tableName}.weidengxingzhuang=#{weidengxingzhuang}
+        </if>
+        <if test="haopaikuangmei !=null and haopaikuangmei != ''">
+            AND ${tableName}.haopaikuangmei = #{haopaikuangmei}
+        </if>
+        <if test="haopaikuangxing !=null and haopaikuangxing != ''">
+            AND ${tableName}.haopaikuangxing=#{haopaikuangxing}
+        </if>
+        <if test="haopaiweizhi !=null and haopaiweizhi != ''">
+            AND ${tableName}.haopaiweizhi = #{haopaiweizhi}
+        </if>
+        <if test="gaoweizhidongdeng !=null and gaoweizhidongdeng != ''">
+            AND ${tableName}.gaoweizhidongdeng=#{gaoweizhidongdeng}
+        </if>
+        <if test="houfangwudeng !=null and houfangwudeng != ''">
+            AND ${tableName}.houfangwudeng = #{houfangwudeng}
+        </if>
+        <if test="paiqikouwei !=null and paiqikouwei != ''">
+            AND ${tableName}.paiqikouwei=#{paiqikouwei}
+        </if>
+        <if test="backxinnengyuanbiao !=null and backxinnengyuanbiao != ''">
+            AND ${tableName}.backxinnengyuanbiao = #{backxinnengyuanbiao}
+        </if>
+        <if test="waiguabeitai !=null and waiguabeitai != ''">
+            AND ${tableName}.waiguabeitai=#{waiguabeitai}
+        </if>
+        <if test="dingmifengtiao !=null and dingmifengtiao != ''">
+            AND ${tableName}.dingmifengtiao = #{dingmifengtiao}
+        </if>
+        <if test="weiyiraoliu !=null and weiyiraoliu != ''">
+            AND ${tableName}.weiyiraoliu=#{weiyiraoliu}
+        </if>
+        <if test="xinglizhijia !=null and xinglizhijia != ''">
+            AND ${tableName}.xinglizhijia = #{xinglizhijia}
+        </if>
+        <if test="beijitianxian !=null and beijitianxian != ''">
+            AND ${tableName}.beijitianxian=#{beijitianxian}
+        </if>
+        <if test="status != null and status != ''">
+            AND ${tableName}.status = #{status}
+        </if>
+        <if test="saishi !=null and saishi != ''">
+            AND ${tableName}.saishi=#{saishi}
+        </if>
+        <if test="chechuangneikuang !=null and chechuangneikuang != ''">
+            AND ${tableName}.chechuangneikuang=#{chechuangneikuang}
+        </if>
+    </sql>
+
+    <select id="getAllVehicles" resultMap="vehicleResultMap">
+        SELECT vbv.* FROM view_biz_vehicle AS vbv
+        RIGHT JOIN
+
+        (SELECT bv.id AS id
+        FROM biz_vehicle AS bv
+        <if test="hasParams != null">
+            FORCE INDEX(index_brand)
+        </if>
+        <include refid="getAllVehiclesConditions">
+            <property name="tableName" value="bv"/>
+        </include>
+        ORDER BY bv.brandInitials ASC, convert(bv.brandName using gbk) ASC, bv.hotindexSort ASC, bv.createtime DESC limit #{pageStart}, #{pageSize}) AS tmp
+
+        ON tmp.id=vbv.id
+    </select>
+
+    <select id="getVehicleCount" resultType="java.lang.Integer" >
+        SELECT count(hotindex)
+        FROM biz_vehicle AS v
+        <if test="hasParams != null">
+            FORCE INDEX(index_brand)
+        </if>
+        <include refid="getAllVehiclesConditions">
+            <property name="tableName" value="v"/>
+        </include>
+    </select>
+
+    <select id="getVehicleById"  resultMap="vehicleResultMap">
+        SELECT v.id,v.image,
+        b.id AS brandId,b.name AS brand,b.initials,s.id AS seriesId,s.name AS series,
+        y.id AS yearId,y.`Name` AS modelyear,y.code AS yearCode,
+        m.id AS modelId,m.`Name` AS model
+        FROM biz_vehicle AS v
+
+        LEFT JOIN biz_brand AS b ON v.brand=b.id
+        LEFT JOIN	biz_series AS s on s.id=v.series
+        LEFT JOIN biz_year AS y ON v.modelyear=y.id
+        LEFT JOIN 	biz_model AS m ON v.model=m.id
+        WHERE v.id=#{id};
+    </select>
+
+    <insert id="saveOrUpdate" flushCache="true" parameterType="com.carcompare.core.vehicles.VirtualBSYM" >
+        <selectKey keyProperty="count,oid" resultType="com.carcompare.core.vehicles.VirtualBSYM" order="BEFORE">
+            select count(*) as count, id as oid  from ${tableName} where `Name` = #{Name}
+            <if test="tableName != 'biz_brand'">
+                and parentid= #{parentid}
+            </if>
+        </selectKey>
+        <if test="count >0 ">
+            update ${tableName}
+            <set>
+                <if test="tableName == 'biz_year'">
+                    code = #{code},
+                </if>
+                <if test="tableName == 'biz_brand'">
+                    `order` = #{order},
+                    initials = #{initials},
+                </if>
+                `Name` = #{Name}
+            </set>
+            <where>
+                `Name` = #{Name}
+                <if test="tableName != 'biz_brand'">
+                    and parentid= #{parentid}
+                </if>
+            </where>
+        </if>
+        <if test="count ==0">
+            insert into ${tableName} (
+            <if test="tableName != 'biz_brand'">
+                parentid,
+            </if>
+            <if test="tableName == 'biz_year'">
+                code,
+            </if>
+            <if test="tableName == 'biz_brand'">
+                `order` , initials ,
+            </if>
+            id,`Name`
+            ) values(
+            <if test="tableName != 'biz_brand'">
+                #{parentid},
+            </if>
+            <if test="tableName == 'biz_year'">
+                #{code},
+            </if>
+            <if test="tableName == 'biz_brand'">
+                #{order} , #{initials} ,
+            </if>
+            #{id},#{Name}
+            )
+        </if>
+    </insert>
+</mapper>

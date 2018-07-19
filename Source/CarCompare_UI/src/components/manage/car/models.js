@@ -1,0 +1,60 @@
+export const createEmptyFeatrues = function() {
+    return {
+        brand: "",
+        modelyear: "",
+        id: "",
+        hotindex: 0,
+        series: "",
+        model: "",
+        type: "",
+        xiangxing: "",
+        chebiaokuangxing: "",
+        chebiaoweizhi: "",
+        geshanjiegou: "",
+        shangeshanxing: "",
+        geshanqianwu: "",
+        geshanqianzhao: "",
+        qianbaohuban: "",
+        fromtxingnengyuanbiao: "",
+        bzhuyanse: "",
+        houchuangxiaochuang: "",
+        houchuangxiayan: "",
+        menbashou: "",
+        menbashouyanse: "",
+        menxianwei: "",
+        lungulunfu: "",
+        youxianggaiwei: "",
+        sidexingnengyuanbiao: "",
+        houchuangkuangxing: "",
+        weidengweizhi: "",
+        weidengxingzhuang: "",
+        haopaikuangmei: "",
+        haopaikuangxing: "",
+        haopaiweizhi: "",
+        gaoweizhidongdeng: "",
+        houfangwudeng: "",
+        paiqikouwei: "",
+        backxingnengyuanbiao: "",
+        waiguabeitai: "",
+        dingmifengtiao: "",
+        weiyiraoliu: "",
+        xinglizhijia: "",
+        beijitianxian: "",
+        shanggeshanxing: "",
+        frontxinnengyuanbiao: "",
+        backxinnengyuanbiao: "",
+        sidexinnengyuanbiao: "",
+        saishi: "",
+        chechuangneikuang: ""
+    }
+}
+
+export const createEmptyImagesList = function() {
+    return [
+        { name: "", url: "", bigurl: "", oriurl: "" },
+        { name: "", url: "", bigurl: "", oriurl: "" },
+        { name: "", url: "", bigurl: "", oriurl: "" },
+        { name: "", url: "", bigurl: "", oriurl: "" },
+        { name: "", url: "", bigurl: "", oriurl: "" }
+    ]
+}

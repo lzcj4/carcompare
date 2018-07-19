@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.carcompare.mapper.MenuMapper">
+    <resultMap id="menuMap" type="com.carcompare.core.menus.Menu">
+        <id property="id" column="id"/>
+        <result property="path" column="path"/>
+        <result property="component" column="component"/>
+        <result property="name" column="name"/>
+        <result property="icon" column="icon"/>
+        <result property="parentId" column="parentid"/>
+        <result property="requireAuth" column="requireauth"/>
+        <result property="enabled" column="enabled"/>
+        <result property="roleName" column="roleName"/>
+    </resultMap>
+
+    <resultMap id="baseResultMap" type="com.carcompare.core.menus.Menu">
+        <id property="id" column="id"/>
+        <result property="path" column="path"/>
+        <result property="component" column="component"/>
+        <result property="name" column="name"/>
+        <result property="icon" column="icon"/>
+        <result property="parentId" column="parentid"/>
+        <result property="requireAuth" column="requireauth"/>
+        <result property="enabled" column="enabled"/>
+        <result property="roleName" column="roleName"/>
+        <collection property="children" ofType="com.carcompare.core.menus.Menu">
+            <id property="id" column="id2"/>
+            <result property="path" column="path2"/>
+            <result property="component" column="component2"/>
+            <result property="name" column="name2"/>
+            <result property="icon" column="icon2"/>
+            <result property="parentId" column="parentid2"/>
+            <result property="requireAuth" column="requireauth2"/>
+            <result property="enabled" column="enabled2"/>
+            <result property="roleName" column="roleName"/>
+            <collection property="children" ofType="com.carcompare.core.menus.Menu">
+                <id property="id" column="id3"/>
+                <result property="name" column="name3"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="getMenusByUserId" parameterType="Long" resultMap="baseResultMap">
+        select m1.*,m2.`component` as component2,m2.`icon` as icon2, m2.`parentid` as parentid2,m2.`name` as name2,
+        m2.`path` as path2,m2.`requireAuth` as requireAuth2 from menu m1,menu m2
+        where m1.`id`=m2.`parentId` and  NOT ISNULL(m1.parentId) and m2.`id`
+        in(select rm.`menuId` from user_role ur,role_menu rm
+            where ur.`roleId`=rm.`roleId` and ur.`userId`=#{userId}) and m2.`enabled`=true
+        order by m1.order, m2.order
+    </select>
+
+    <select id="getMenuTree" resultMap="baseResultMap">
+        select m1.`id`,m1.`name`,m2.`id` as id2,m2.`name` as name2,m3.`id` as id3,m3.`name` as name3
+        from menu m1,menu m2,menu m3
+        where m1.`id`=m2.`parentId` and m2.`id`=m3.`parentId` and m3.`enabled`=true
+        ORDER BY m1.order, m2.order, m3.order ASC
+    </select>
+
+    <select id="getMenusByRoleId" resultType="Long">
+        SELECT menuId FROM role_menu WHERE roleId=#{roleId}
+    </select>
+
+    <select id="getMenuItemsByRoleId" resultMap="menuMap">
+        select m.*
+        from menu m,role_menu rm
+        where  m.`enabled`=true and m.id=rm.menuId  and rm.roleId=#{roleId}
+    </select>
+    
+    <select id="getLeafMenus" resultMap="menuMap">
+        SELECT *
+        FROM menu
+        WHERE enabled = true AND parentId = 2
+    </select>
+
+    <select id="getMenuByPath" resultMap="menuMap">
+        SELECT * FROM menu WHERE path=#{path}
+    </select>
+</mapper>

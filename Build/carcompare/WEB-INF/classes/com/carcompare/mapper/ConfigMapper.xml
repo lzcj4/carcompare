@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.carcompare.mapper.ConfigMapper">
+    <resultMap id="brandResultMap" type="com.carcompare.core.vehicles.Brand">
+        <id property="id" column="id" jdbcType="CHAR"/>
+        <result property="name" column="name"/>
+    </resultMap>
+    <resultMap id="seriesResultMap" type="com.carcompare.dto.common.KeyValueDto">
+        <id property="key" column="id" jdbcType="CHAR"/>
+        <result property="value" column="name"/>
+    </resultMap>
+    <resultMap id="modelYearResultMap" type="com.carcompare.dto.common.KeyValueDto">
+        <id property="key" column="id" jdbcType="CHAR"/>
+        <result property="value" column="name"/>
+    </resultMap>
+    <resultMap id="modelResultMap" type="com.carcompare.dto.common.KeyValueDto">
+        <id property="key" column="id" jdbcType="CHAR"/>
+        <result property="value" column="name"/>
+    </resultMap>
+
+    <select id="getAllBrands" resultMap="brandResultMap">
+        SELECT b.* FROM biz_brand b
+        ORDER BY  b.initials ASC,convert(name using gbk) ASC
+    </select>
+
+    <select id="getSeriesByBrandId" parameterType="String" resultMap="seriesResultMap">
+        SELECT * FROM biz_series
+        WHERE parentid = #{brandId}
+        ORDER BY convert(name using gbk) ASC
+    </select>
+
+    <select id="getModelYearsBySeriesId" parameterType="String" resultMap="modelYearResultMap">
+        SELECT *
+        FROM biz_year
+        WHERE parentid = #{seriesId}
+        ORDER BY convert(name using gbk) ASC
+    </select>
+
+    <select id="getModelsByYearId" parameterType="String" resultMap="modelResultMap">
+		SELECT *
+		FROM biz_model
+        WHERE parentid = #{modelyearId}
+        ORDER BY convert(name using gbk) ASC
+    </select>
+</mapper>

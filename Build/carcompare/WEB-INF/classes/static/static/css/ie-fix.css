@@ -1,0 +1,17 @@
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+	/*修复el-table组件checkbox这一列显示问题*/
+	.el-table-column--selection .cell{		
+		padding-right:0px !important;
+	}
+
+	/*修复el-table组件cell宽度显示问题*/
+	.el-table .cell, .el-table th div{
+		text-overflow:clip !important;
+	}
+
+	/*修复登录界面样式问题*/
+	.login-container .el-form-item__content{
+		line-height: 0px !important;
+	}
+}

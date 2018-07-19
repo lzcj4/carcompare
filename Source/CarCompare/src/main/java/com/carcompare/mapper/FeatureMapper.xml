@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.carcompare.mapper.FeatureMapper">
+
+    <resultMap id="baseResultMap" type="com.carcompare.core.features.FeatureGroup">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <collection property="items" ofType="com.carcompare.core.features.FeatureItem" columnPrefix="i_">
+            <id property="id" column="id"/>
+            <result property="code" column="code"/>
+            <result property="name" column="name"/>
+        </collection>
+    </resultMap>
+
+    <sql id="selectAll">
+        SELECT g.*, i.id AS i_id, i.code AS i_code, i.name AS i_name FROM biz_feature_group g, biz_feature_item i WHERE g.id = i.parentId
+    </sql>
+
+    <select id="getFeatureGroupByCode" resultMap="baseResultMap">
+        SELECT g.*, i.id AS i_id, i.code AS i_code, i.name AS i_name FROM biz_feature_group g, biz_feature_item i WHERE g.code = #{code} AND g.id = i.parentId ORDER by i.order ASC
+    </select>
+    
+    <select id="getAllFeatureGroups" resultMap="baseResultMap">
+        <include refid="selectAll"></include>
+        ORDER by i.order ASC
+    </select>
+</mapper>

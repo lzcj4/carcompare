@@ -1,0 +1,23 @@
+2018-07-03更新说明
+
+1、更新前后端代码文件
+com和static目录
+
+
+2、更新logback.xml文件
+优化配置
+
+
+3、更新application.properties文件
+增加配置：
+
+# 密钥提供类(file|fixed)
+custom.license.key.provider = file
+
+
+4、更新car_compare.sql文件
+biz_feature_group表：增加 腮饰、车窗内框 记录
+
+biz_feature_item表：增加 腮饰、车窗内框 的特征记录
+
+biz_vehicle表：增加字段 saishi、chechuangneikuang

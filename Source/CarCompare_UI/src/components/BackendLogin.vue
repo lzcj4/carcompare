@@ -36,18 +36,16 @@
         </div>
     </div>
 
-    <div class="login-footer">
-        <copyright></copyright>
-    </div>
+    <common-footer></common-footer>
 </div>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
-import copyright from "@/components/common/Copyright.vue"
+import commonFooter from "@/components/common/CommonFooter.vue"
 
 export default {
   components: {
-    copyright
+    commonFooter
   },  
   data() {
     return {

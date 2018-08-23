@@ -107,6 +107,19 @@ public class FileUtil {
         }
     }
 
+    public static  void  wirte(String filePath,byte[] content) throws  Exception {
+
+        File file =new File(filePath);
+        file.createNewFile();
+        file.createNewFile();
+
+        FileOutputStream outputStream = null;
+
+        outputStream = new FileOutputStream(filePath);
+        outputStream.write(content);
+        outputStream.close();
+    }
+
     /**
      * 创建文件
      */

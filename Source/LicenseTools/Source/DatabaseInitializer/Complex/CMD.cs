@@ -4,13 +4,13 @@ using System.Diagnostics;
 namespace DatabaseInitializer.Complex
 {
     public class CMD
-    {
+    {        
         /// <summary>
         /// 执行Cmd命令
         /// </summary>
         /// <param name="workingDirectory">要启动的进程的目录</param>
         /// <param name="command">要执行的命令</param>
-        public static void StartCmd(String workingDirectory, String command)
+        public static CmdResult StartCmd(String workingDirectory, String command)
         {
             Process p = new Process();
             p.StartInfo.FileName = "cmd.exe";
@@ -22,8 +22,41 @@ namespace DatabaseInitializer.Complex
             p.StartInfo.CreateNoWindow = true;
             p.Start();
             p.StandardInput.WriteLine(command);
-            p.StandardInput.WriteLine("exit");
+            p.StandardInput.WriteLine("exit");                        
             p.WaitForExit();
+
+            string error = p.StandardError.ReadToEnd();
+
+            return new CmdResult(error);
+        }
+    }
+
+    public class CmdResult
+    {
+        public CmdResult(string error)
+        {
+            Error = error;
+        }
+
+        public bool HasError
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Error))
+                {
+                    return false;
+                }
+                else
+                {
+                    return Error.Contains("Got error");
+                }
+            }
+        }
+
+        public string Error
+        {
+            get;
+            private set;
         }
     }
 }

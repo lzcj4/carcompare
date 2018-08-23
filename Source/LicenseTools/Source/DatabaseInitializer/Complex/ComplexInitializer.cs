@@ -50,25 +50,22 @@ namespace DatabaseInitializer.Complex
         /// <returns></returns>
         private string Backup()
         {
-            try
+            String filePath = GetFile();
+
+            String command = BuildBackupCommand(filePath);
+
+            //获取mysqldump.exe所在路径
+            String appDirecroty = GetMySQLDumpPath();
+
+            CmdResult result = CMD.StartCmd(appDirecroty, command);
+
+            if (result.HasError)
             {
-                String filePath = GetFile();
-
-                String command = BuildBackupCommand(filePath);
-
-                //获取mysqldump.exe所在路径
-                String appDirecroty = GetMySQLDumpPath();
-
-                CMD.StartCmd(appDirecroty, command);
-
-                return filePath;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(LOG_SOURCE, ex.StackTrace);
-
+                Logger.Error(LOG_SOURCE, result.Error);
                 throw new ApplicationException("备份数据库失败");
             }
+
+            return filePath;
         }
 
         /// <summary>
@@ -76,19 +73,16 @@ namespace DatabaseInitializer.Complex
         /// </summary>
         private void Restore(string filePath)
         {
-            try
+            String command = BuildRestoreCommand(filePath);
+
+            //获取mysqldump.exe所在路径
+            String appDirecroty = GetMySQLDumpPath();
+
+            CmdResult result = CMD.StartCmd(appDirecroty, command);
+
+            if (result.HasError)
             {
-                String command = BuildRestoreCommand(filePath);
-
-                //获取mysqldump.exe所在路径
-                String appDirecroty = GetMySQLDumpPath();
-
-                CMD.StartCmd(appDirecroty, command);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(LOG_SOURCE, ex.StackTrace);
-
+                Logger.Error(LOG_SOURCE, result.Error);
                 throw new ApplicationException("还原数据库失败");
             }
         }

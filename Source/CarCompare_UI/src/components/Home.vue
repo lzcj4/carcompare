@@ -3,7 +3,7 @@
     <div class="header">
 
       <el-row class="header-row">
-        <el-col :span="10" class="logo"><img src="../assets/images/frontend/logo.png" width="122" height="30" /></el-col>
+        <el-col :span="10" class="logo"><img src="../assets/images/frontend/logo.png"/></el-col>
         <el-col :span="4" class="userinfo">
           <top-user parent="home" :enable-home-menu="false" :enable-manage-menu="true"></top-user>
         </el-col>
@@ -46,9 +46,7 @@
       </el-row>
 
     </div>
-    <div class="footer">
-      <copyright></copyright>
-    </div>
+    <common-footer></common-footer>
 
     <vehicle-contrast ref="vehicleContrast" :vehicleId="vehicleId" :originalUrl="originalUrl" @modelClick="handleModelClick"></vehicle-contrast>    
 
@@ -65,9 +63,9 @@ import filterTagBar from "./home/FilterTagBar.vue";
 import filterResult from "./home/FilterResult.vue";
 import imageSelector from "./home/ImageSelector.vue";
 import vehicleContrast from "@/components/common/VehicleContrast.vue";
-import copyright from "@/components/common/Copyright.vue"
 import lazyRender from "@/components/base/LazyRender.vue"
 import CarDetail from "./home/CarDetail.vue";
+import commonFooter from "@/components/common/CommonFooter.vue"
 
 export default {
   components: {
@@ -76,10 +74,10 @@ export default {
     filterTagBar,
     filterResult,
     imageSelector,
-    vehicleContrast,
-    copyright,
+    vehicleContrast,    
     lazyRender,
     CarDetail,
+    commonFooter
   },
   data() {
     return {

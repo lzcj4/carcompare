@@ -1,12 +1,13 @@
 package com.carcompare.service;
 
+import com.carcompare.Imageencryption.IImageDEncrypter;
 import com.carcompare.base.UserFriendlyException;
-import com.carcompare.dto.car.CarOutput;
-import com.carcompare.dto.car.ImageParameter;
-import com.carcompare.dto.car.Vehicle;
 import com.carcompare.core.logs.Log;
 import com.carcompare.core.vehicles.Feature;
 import com.carcompare.core.vehicles.FeaturePicture;
+import com.carcompare.dto.car.CarOutput;
+import com.carcompare.dto.car.ImageParameter;
+import com.carcompare.dto.car.Vehicle;
 import com.carcompare.mapper.VehicleFeatureMapper;
 import com.carcompare.mapper.VehicleFeaturePictureMapper;
 import com.carcompare.mapper.VehicleMapper;
@@ -16,6 +17,7 @@ import com.carcompare.utils.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +26,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -61,6 +65,10 @@ public class CarService extends BaseService {
 
     @Autowired
     private LogUtil logUtil;
+
+    @Autowired
+    @Qualifier("imageDEncrypter")
+    private IImageDEncrypter imageDEncrypter;
 
     public CarOutput get(String id) {
         CarOutput carOutput = new CarOutput();
@@ -288,15 +296,17 @@ public class CarService extends BaseService {
             }
 
             imageUrl = UUID.randomUUID().toString() + "." + extention;
-            ImageIO.write(originImage, extention, new File(dir.getPath(), imageUrl));
+            FileUtil.wirte(new File(dir.getPath(), imageUrl).getPath(), encryptImage(originImage,extention));
 
             BufferedImage scaleImage = ImageUtil.zoomImageScale(originImage, this.smallWidth, imageType);
             smallUrl = UUID.randomUUID().toString() + "." + extention;
-            ImageIO.write(scaleImage, extention, new File(dir.getPath(), smallUrl));
+            FileUtil.wirte(new File(dir.getPath(), smallUrl).getPath(), encryptImage(scaleImage,extention));
+
 
             scaleImage = ImageUtil.zoomImageScale(originImage, this.middleWidth, imageType);
             middleUrl = UUID.randomUUID().toString() + "." + extention;
-            ImageIO.write(scaleImage, extention, new File(dir.getPath(), middleUrl));
+            FileUtil.wirte( new File(dir.getPath(), middleUrl).getPath(), encryptImage(scaleImage,extention));
+            //ImageIO.write(scaleImage, extention, new File(dir.getPath(), middleUrl));
 
             FeaturePicture featurePicture = new FeaturePicture();
             featurePicture.setParentid(id);
@@ -314,8 +324,24 @@ public class CarService extends BaseService {
         }
         return imageUrl;
     }
+
     private String getImagePath() {
         return new SimpleDateFormat("yyyy/MM/dd/").format(new Date());
+    }
+
+    /**
+     * 加密图片
+     * @param bufferedImage
+     * @param extension
+     * @return
+     * @throws IOException
+     */
+    public byte[] encryptImage(BufferedImage bufferedImage, String extension) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, extension, outputStream);
+        outputStream.flush();
+        byte[] image = outputStream.toByteArray();
+        return imageDEncrypter.encrypt(image);
     }
 
     private void saveDeleteVehicleLog(Vehicle vehicle){

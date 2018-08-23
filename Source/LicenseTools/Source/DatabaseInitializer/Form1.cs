@@ -28,7 +28,6 @@ namespace DatabaseInitializer
 
             IInitializer initializer = new ComplexInitializer(GetSettings(), new ScriptsProvider());
             initializer.ProgressChanged += Initializer_ProgressChanged;
-            ;            
 
             Task.Factory.StartNew(() =>
             {

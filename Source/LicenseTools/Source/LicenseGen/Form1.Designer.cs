@@ -39,22 +39,27 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnSubmit = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numUserCount = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numUserCount)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.numUserCount);
             this.groupBox1.Controls.Add(this.cmbTimes);
             this.groupBox1.Controls.Add(this.dtpEnd);
             this.groupBox1.Controls.Add(this.dtpBegin);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.txtMachineCode);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(13, 14);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(419, 206);
+            this.groupBox1.Size = new System.Drawing.Size(419, 253);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "参数设置";
@@ -132,7 +137,7 @@
             // 
             // btnSubmit
             // 
-            this.btnSubmit.Location = new System.Drawing.Point(253, 240);
+            this.btnSubmit.Location = new System.Drawing.Point(253, 289);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(75, 23);
             this.btnSubmit.TabIndex = 1;
@@ -142,7 +147,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(355, 240);
+            this.btnCancel.Location = new System.Drawing.Point(355, 289);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 1;
@@ -150,11 +155,32 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(18, 210);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(65, 12);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "用 户 数：";
+            // 
+            // numUserCount
+            // 
+            this.numUserCount.Location = new System.Drawing.Point(90, 208);
+            this.numUserCount.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            0});
+            this.numUserCount.Name = "numUserCount";
+            this.numUserCount.Size = new System.Drawing.Size(309, 21);
+            this.numUserCount.TabIndex = 6;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(444, 281);
+            this.ClientSize = new System.Drawing.Size(444, 330);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSubmit);
             this.Controls.Add(this.groupBox1);
@@ -165,6 +191,7 @@
             this.Text = "许可证生成工具";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numUserCount)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -182,6 +209,8 @@
         private System.Windows.Forms.DateTimePicker dtpBegin;
         private System.Windows.Forms.ComboBox cmbTimes;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown numUserCount;
+        private System.Windows.Forms.Label label5;
     }
 }
 

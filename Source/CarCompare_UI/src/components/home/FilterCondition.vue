@@ -105,7 +105,7 @@ export default {
             //年份
             yearSource: [],
             
-            //厢形字典数据
+            //厢型字典数据
             carriageTypeSource: [],
 
             //车型字典数据

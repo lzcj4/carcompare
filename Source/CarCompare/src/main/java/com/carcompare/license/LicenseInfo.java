@@ -12,7 +12,7 @@ import java.util.Date;
  * 许可证信息
  */
 @Data
-class LicenseInfo {
+public class LicenseInfo {
     /**
      * 机器码
      */
@@ -27,6 +27,11 @@ class LicenseInfo {
      * 授权结束时间
      */
     private Date end;
+
+    /**
+     * 授权注册用户数
+     */
+    private int userCount;
 
     public String getBeginFormat(){
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(begin);
@@ -50,7 +55,7 @@ class LicenseInfo {
      */
     public void fromJSONString(String text){
         JSONObject jsonObject = JSON.parseObject(text);
-        LicenseInfo licenseInfo = (LicenseInfo) JSONObject.toJavaObject(jsonObject, LicenseInfo.class);
+        LicenseInfo licenseInfo = JSONObject.toJavaObject(jsonObject, LicenseInfo.class);
         BeanUtils.copyProperties(licenseInfo, this);
     }
 }

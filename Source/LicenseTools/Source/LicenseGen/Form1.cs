@@ -159,7 +159,8 @@ namespace LicenseGen
                 ID = Guid.NewGuid().ToString(),
                 MachineCode = this.txtMachineCode.Text,
                 Begin = this.dtpBegin.Value,
-                End = this.dtpEnd.Value
+                End = this.dtpEnd.Value,
+                UserCount = (int)this.numUserCount.Value
             };
         }
 

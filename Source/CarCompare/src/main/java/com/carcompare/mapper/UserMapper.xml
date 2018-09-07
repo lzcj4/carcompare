@@ -23,7 +23,7 @@
     </resultMap>
 
     <sql id="selectAll">
-        SELECT u1.*, u2.name AS creationUserName,r.id r_id, r.code r_code, r.name r_name,r.description r_description, r.isBackend r_isBackend, r.defaultUrl r_defaultUrl, r.enabled r_enabled
+        SELECT u1.*, u2.name AS creationUserName,r.id AS r_id, r.code AS r_code, r.name AS r_name,r.description AS r_description, r.isBackend AS r_isBackend, r.defaultUrl AS r_defaultUrl, r.enabled AS r_enabled
         FROM user u1
         LEFT JOIN user u2 ON u1.creationUserId = u2.id
         LEFT JOIN user_role ur ON u1.id = ur.userId
@@ -33,7 +33,6 @@
 
     <select id="getAllUsers" resultMap="baseResultMap">
         <include refid="selectAll"></include>
-        AND u1.username != 'admin'
         <if test="keywords!=''">
             AND (u1.`name` LIKE concat('%',#{keywords},'%') OR u1.`username` LIKE concat('%',#{keywords},'%'))
         </if>
@@ -62,7 +61,7 @@
         (name, username, password, salt, status, creationUserId, creationTime)
         values
         (#{name}, #{username}, #{password}, #{salt}, #{status}, #{creationUserId}, #{creationTime})
-  </insert>
+    </insert>
 
     <update id="updateUser">
         UPDATE user

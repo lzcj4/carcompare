@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <span>厢形：&nbsp;&nbsp;</span>
+    <span>厢型：&nbsp;&nbsp;</span>
     <el-select placeholder="不限" size="mini" v-model="selectedItem" value-key="value" @change="onSelectChanged" style="width:120px;">
         <el-option :label="item.name" :value="item" :key="item.value" v-for="item in source"></el-option>
     </el-select>
@@ -31,7 +31,7 @@ export default {
         buildTag: function(item){
             return {
                 type: this.getTagType(),
-                name: "厢形:" + item.name                
+                name: "厢型:" + item.name                
             };
         },
         getTagType: function(){

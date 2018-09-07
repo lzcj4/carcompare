@@ -1,10 +1,11 @@
 package com.carcompare.controller;
 
 import com.carcompare.base.ApiResult;
-import com.carcompare.dto.user.GetAllUsersInput;
-import com.carcompare.dto.user.GetAllUsersOutput;
+import com.carcompare.base.AppConsts;
 import com.carcompare.core.roles.Role;
 import com.carcompare.core.users.User;
+import com.carcompare.dto.user.GetAllUsersInput;
+import com.carcompare.dto.user.GetAllUsersOutput;
 import com.carcompare.service.RoleService;
 import com.carcompare.service.UserRoleService;
 import com.carcompare.service.UserService;
@@ -34,17 +35,17 @@ public class UserController extends BaseController {
     @GetMapping("")
     public ApiResult getAllUsers(GetAllUsersInput input) {
         GetAllUsersOutput output = this.userService.getAllUsers(input);
+
+        //移除超级管理员
+        output.getItems().removeIf(u->u.getRole() != null && u.getRole().getCode().equals(AppConsts.ADMINISTRATOR_ROLE_CODE));
+
         return new ApiResult(true, output);
     }
 
     @PostMapping("")
     public ApiResult addUser(@Valid User user, BindingResult bindingResult) {
-        boolean success = this.userService.addUser(user);
-        if (success) {
-            return new ApiResult(true);
-        } else {
-            return new ApiResult(false, "操作失败");
-        }
+        this.userService.addUser(user);
+        return new ApiResult(true);
     }
 
     @PutMapping("/{userId}")

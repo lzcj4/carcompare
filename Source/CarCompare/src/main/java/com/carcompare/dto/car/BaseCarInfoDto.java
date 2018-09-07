@@ -7,15 +7,16 @@ import org.apache.poi.ss.usermodel.Row;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class BaseCarInfoDto extends BasePOIMapper<BaseCarInfoDto> {
-    private String  brand,series,year,model;
+    private String  brand,series,year,model,firstBrandChar;
 
     public BaseCarInfoDto(){
     }
-    public BaseCarInfoDto(String b,String s,String y,String m){
+    public BaseCarInfoDto(String b,String s,String y,String m,String c){
         this.brand =b;
         this.series =s;
         this.year = y;
         this.model = m;
+        this.firstBrandChar =c;
     }
     @Override
     public BaseCarInfoDto initDto(Row row) {
@@ -24,6 +25,7 @@ public class BaseCarInfoDto extends BasePOIMapper<BaseCarInfoDto> {
         this.series = row.getCell(1).getStringCellValue().trim();
         this.year=row.getCell(2).getStringCellValue().trim();
         this.model=row.getCell(3).getStringCellValue().trim();
+        this.firstBrandChar =  row.getCell(4) == null ||row.getCell(4).getStringCellValue().isEmpty()?"": row.getCell(4).getStringCellValue().trim().toUpperCase();
         return this;
     }
     @Override
@@ -32,5 +34,6 @@ public class BaseCarInfoDto extends BasePOIMapper<BaseCarInfoDto> {
         row.createCell(1).setCellValue(this.series);
         row.createCell(2).setCellValue(this.year);
         row.createCell(3).setCellValue(this.model);
+        row.createCell(4).setCellValue(this.firstBrandChar);
     }
 }

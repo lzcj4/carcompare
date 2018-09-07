@@ -50,7 +50,7 @@
           </el-select>
         </div>
         <div class="feature-item">
-          <span>厢形：</span>
+          <span>厢型：</span>
           <el-select v-model="feature.xiangxing" placeholder="请选择" class="feature-selector-inner" v-on:change="handleChange">
             <el-option v-for="(item ,index) in this.featureSource.carriageTypeItems" :key="index" :label="item.name" :value="item.value" class="feature-selector-inner">
             </el-option>

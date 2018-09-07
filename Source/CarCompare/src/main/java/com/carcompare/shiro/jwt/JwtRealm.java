@@ -42,7 +42,7 @@ public class JwtRealm extends AuthorizingRealm {
         // 根据用户名查找角色，请根据需求实现
         String username = (String) principals.getPrimaryPrincipal();
 
-        User user = userService.getByUsername(username);
+        User user = userService.getUser(username);
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         if (user != null) {
             authorizationInfo.addRole(user.getRole().getCode());

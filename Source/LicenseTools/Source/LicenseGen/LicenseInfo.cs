@@ -13,6 +13,9 @@ namespace LicenseGen
             set;
         }
 
+        /// <summary>
+        /// 机器码
+        /// </summary>
         [JsonProperty("machineCode")]
         public string MachineCode
         {
@@ -20,6 +23,9 @@ namespace LicenseGen
             set;
         }
 
+        /// <summary>
+        /// 授权开始时间
+        /// </summary>
         [JsonProperty("begin")]
         public DateTime Begin
         {
@@ -27,8 +33,21 @@ namespace LicenseGen
             set;
         }
 
+        /// <summary>
+        /// 授权结束时间
+        /// </summary>
         [JsonProperty("end")]
         public DateTime End
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 授权用户数
+        /// </summary>
+        [JsonProperty("userCount")]
+        public int UserCount
         {
             get;
             set;
@@ -44,6 +63,11 @@ namespace LicenseGen
             if(Begin >= End)
             {
                 throw new ApplicationException("生效时间不能大于失效时间");
+            }
+
+            if (UserCount <= 0)
+            {
+                throw new ApplicationException("授权用户数必须大于0");
             }
         }
 

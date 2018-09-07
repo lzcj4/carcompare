@@ -21,6 +21,7 @@
         <el-table-column prop="name" align="left" fixed label="姓名" width="200px"></el-table-column>
         <el-table-column prop="username" align="left" label="用户名" width="200px"></el-table-column>
         <el-table-column prop="role.name" align="left" label="角色" width="200px"></el-table-column>
+        <el-table-column prop="creationUserName" align="left" label="创建人" width="200px"></el-table-column>
         <el-table-column align="left" label="创建时间" min-width="200px">
           <template slot-scope="scope">{{ scope.row.creationTime | formatDateTime}}</template>
         </el-table-column>

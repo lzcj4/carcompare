@@ -1,6 +1,7 @@
 package com.carcompare.controller;
 
 import com.carcompare.base.ApiResult;
+import com.carcompare.base.AppConsts;
 import com.carcompare.license.LicenseValidationResult;
 import com.carcompare.license.LicenseValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,6 @@ public class CommonController {
 
     @Value("${custom.captcha.enable}")
     Boolean captchaEnable;
-
-    @Value("${custom.frontend.administrator.rolecode}")
-    String frontendAdministratorRoleCode;
 
     @RequestMapping(path = "/401")
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -87,7 +85,7 @@ public class CommonController {
         Map<String, Object> map = new HashMap<>();
 
         map.put("captchaEnable", captchaEnable);
-        map.put("frontendAdministratorRoleCode", frontendAdministratorRoleCode);
+        map.put("frontendAdministratorRoleCode", AppConsts.FRONTEND_ADMIN_ROLE_CODE);
 
         return new ApiResult(true, map);
     }

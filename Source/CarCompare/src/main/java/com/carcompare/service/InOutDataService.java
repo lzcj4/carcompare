@@ -2,9 +2,8 @@ package com.carcompare.service;
 
 import com.carcompare.base.BasePOIMapper;
 import com.carcompare.base.UserFriendlyException;
-import com.carcompare.controller.AuthController;
-import com.carcompare.dto.car.BaseCarInfoDto;
 import com.carcompare.core.vehicles.VirtualBSYM;
+import com.carcompare.dto.car.BaseCarInfoDto;
 import com.carcompare.mapper.VehicleMapper;
 import com.carcompare.utils.ChineseUtil;
 import org.apache.commons.lang3.tuple.Pair;
@@ -70,7 +69,8 @@ public class InOutDataService {
         List<BaseCarInfoDto> tmpList =new ArrayList<>();
         for(int i = 0;i< dtoList.size();i++){
             if(i==0) {
-                tmpList.add(new BaseCarInfoDto(dtoList.get(i).getBrand(),dtoList.get(i).getSeries(),dtoList.get(i).getYear(),dtoList.get(i).getModel()));
+                tmpList.add(new BaseCarInfoDto(dtoList.get(i).getBrand(),dtoList.get(i).getSeries(),dtoList.get(i).getYear(),
+                        dtoList.get(i).getModel(),dtoList.get(i).getFirstBrandChar()));
                 continue;
             }
             boolean exsits = false;
@@ -88,7 +88,8 @@ public class InOutDataService {
             }
 
             if(!exsits)
-                tmpList.add(new BaseCarInfoDto(dtoList.get(i).getBrand(),dtoList.get(i).getSeries(),dtoList.get(i).getYear(),dtoList.get(i).getModel()));
+                tmpList.add(new BaseCarInfoDto(dtoList.get(i).getBrand(),dtoList.get(i).getSeries(),dtoList.get(i).getYear(),
+                        dtoList.get(i).getModel(),dtoList.get(i).getFirstBrandChar()));
         }
         String tmpMessage= String.format("去重前 %d条，去重后 %d条， 共有重复数据　%d 条！|",dtoList.size(),tmpList.size(),dtoList.size() - tmpList.size());
         message += tmpMessage;
@@ -101,21 +102,21 @@ public class InOutDataService {
         System.out.println(message);
         Map<String,List<BaseCarInfoDto>> brandGroups= dtoList.stream().collect(Collectors.groupingBy(BaseCarInfoDto::getBrand));
         brandGroups.forEach((b,bv)->{
-            Pair<String,Boolean> result = saveOrUpdateVirtualBSYM("biz_brand",b,"");
+            Pair<String,Boolean> result = saveOrUpdateVirtualBSYM("biz_brand",b,"",bv.get(0).getFirstBrandChar());
             String bid = result.getLeft();
             if(bid != null && bid.length() ==36 ){
                 Map<String,List<BaseCarInfoDto>> seriesGroups = bv.stream().collect(Collectors.groupingBy(BaseCarInfoDto::getSeries));
                 seriesGroups.forEach((s,sv)->{
-                    Pair<String,Boolean> resultS=saveOrUpdateVirtualBSYM("biz_series",s,bid);
+                    Pair<String,Boolean> resultS=saveOrUpdateVirtualBSYM("biz_series",s,bid,"");
                     String sid =resultS.getLeft();
                     if(sid != null && sid.length() ==36){
                         Map<String,List<BaseCarInfoDto>> yearGroups = sv.stream().collect(Collectors.groupingBy(BaseCarInfoDto::getYear));
                         yearGroups.forEach((y,yv)->{
-                            Pair<String,Boolean> resultY=saveOrUpdateVirtualBSYM("biz_year",y,sid);
+                            Pair<String,Boolean> resultY=saveOrUpdateVirtualBSYM("biz_year",y,sid,"");
                             String yid =resultY.getLeft();
                             if(yid != null && yid.length() ==36) {
                                 yv.forEach((m) -> {
-                                    Pair<String,Boolean> resultM=  saveOrUpdateVirtualBSYM("biz_model", m.getModel(), yid);
+                                    Pair<String,Boolean> resultM=  saveOrUpdateVirtualBSYM("biz_model", m.getModel(), yid,"");
                                     if(resultM.getRight()){
                                        String tmp="更新model:"+ m.getModel()+ "yid:"+yid;
                                        //message += tmp;
@@ -138,7 +139,7 @@ public class InOutDataService {
         return message;
     }
 
-    private  Pair<String,Boolean> saveOrUpdateVirtualBSYM(String tableName,String name ,String parentId) {
+    private  Pair<String,Boolean> saveOrUpdateVirtualBSYM(String tableName,String name ,String parentId,String firstBrandChar) {
         VirtualBSYM bsym = new VirtualBSYM();
         bsym.setId(UUID.randomUUID().toString());
         bsym.setName(name);
@@ -148,7 +149,7 @@ public class InOutDataService {
         if (tableName.compareToIgnoreCase("biz_year") == 0 && name.length() > 4)
             bsym.setCode(name.substring(0, 4));
         if (tableName.compareToIgnoreCase("biz_brand") == 0)
-            bsym.setInitials(Character.toUpperCase(ChineseUtil.getFirstPinyin(name.charAt(0))));
+            bsym.setInitials(firstBrandChar.length()>0? firstBrandChar.charAt(0):' ');
         vehicleMapper.saveOrUpdate(bsym);
 
         return bsym.getOid() == null ? Pair.of(bsym.getId(),false):Pair.of(bsym.getOid(),true);
